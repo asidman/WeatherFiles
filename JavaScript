@@ -1,0 +1,45 @@
+var btn = document.getElementById("btn");
+
+var weatherContainer = document.getElementById("weatherdata");
+var tempContainer = document.getElementById("tempdata");
+var coordContainer = document.getElementById("coorddata");
+pageCounter = 1;
+
+btn.addEventListener("click", function() {
+var ourWeatherInfo = new XMLHttpRequest();
+ourWeatherInfo.open('GET', 'https://api.openweathermap.org/data/2.5/weather?q=London,uk&&appid=0c92884d7b5742762d9e564c060ac2af');
+ourWeatherInfo.onload = function(){
+    var ourData = JSON.parse(this.responseText);
+    renderHTML(ourData);
+  
+};
+  ourWeatherInfo.send();
+})
+function ktof(kelvin){
+  var far = Math.floor((kelvin - 273.15) * (9/5) + 32);
+  return far;
+}
+
+                     
+function renderHTML(data) {
+ var htmlString = ""; 
+ var tempString = "";
+ var coordString = "";
+  
+  var city = data.name;
+  var wDescription = data.weather[0].description;
+  var minT = data.main.temp_min;
+  var feelsLike = data.main.feels_like;
+  var maxT = data.main.temp_max;
+  var clat = data.coord.lat;
+  var clon = data.coord.lon;
+  
+  
+  htmlString += "<p> City: " + city + "Weather: " + wDescription + ".</p>";
+  tempString += "<p> Temperature: " + "Min: " + ktof(minT) + "F.   Max: " +ktof(maxT) + "F.   Feels Like : " + ktof(feelsLike) + "F. </p>";
+  coordString += "<p> Coord: " + clat + ", " + clon + ".</p>";
+  
+  weatherContainer.insertAdjacentHTML('beforeend',htmlString);
+  tempContainer.insertAdjacentHTML('beforeend', tempString);
+  coordContainer.insertAdjacentHTML('beforeend', coordString);
+}                     
